@@ -20,7 +20,7 @@ def signup(request):
             new_user = User.objects.create_user(username, email, password)
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
-            return redirect('home')
+            return redirect('accounts:home')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'signup_form': form})
@@ -34,7 +34,7 @@ def signin(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user:
-                return redirect('home')
+                return redirect('posts:user_posts', username=username)
             else:
                 form = SigninForm()
     else:
