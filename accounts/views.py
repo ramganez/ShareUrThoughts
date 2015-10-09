@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
 from accounts.forms import SignUpForm, SigninForm
 
 # Create your views here.
+
 
 
 def signup(request):
@@ -20,7 +22,8 @@ def signup(request):
             new_user = User.objects.create_user(username, email, password)
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
-            return redirect('accounts:home')
+            new_user.save()
+            return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'signup_form': form})

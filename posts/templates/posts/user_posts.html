@@ -1,5 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hello {{ user }}...</h1>
+    <h1>Hello {{ user.first_name }}</h1>
+
+    <ul>
+        {% for post in object_list %}
+            <li><a style="text-decoration: none" href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+        {% empty %}
+            <li>Share your thoughts now ...</li>
+        {% endfor %}
+    </ul>
+    <a class="button" href="{% url 'posts:create_post' user.username %}">Create</a>
 {% endblock %}
