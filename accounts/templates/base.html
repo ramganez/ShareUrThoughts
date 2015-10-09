@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> {% block title %} Shares {% endblock %} </title>
+
+    {% load staticfiles %}
+    {% block extra_head %}
+
+        <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/skeleton.css' %}" />
+
+    {% endblock %}
+
+</head>
+<body>
+
+    <div class="container">
+        {% block header %}
+            <p class="header-links">
+                <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
+                <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
+            </p>
+        {% endblock %}
+    </div>
+
+    <div class="">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
+
+
+
+
+

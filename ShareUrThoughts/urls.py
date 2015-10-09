@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'ShareUrThoughts.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^', include('accounts.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
