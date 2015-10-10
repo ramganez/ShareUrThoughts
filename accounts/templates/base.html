@@ -18,16 +18,27 @@
 <body>
 
     <div class="container">
+        <div class="row">
         {% block header %}
-            <p class="header-links">
-                <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
-                <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
-            </p>
+            <div class="nine columns">
+                <h2><a style="text-decoration: none" href="{% url 'home' %}">ShareUrThoughts </a></h2>
+            </div>
+            <div class="three columns">
+                <p>
+                    <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
+                    <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
+                </p>
+            </div>
         {% endblock %}
     </div>
 
-    <div class="">
+    <div class="container">
         {% block content %}
+            {% for post in object_list %}
+                <li><a style="text-decoration: none" href="{{ post.get_absolute_url }}">{{ post.title }}</a></li> &nbsp;
+            {% empty %}
+                <li>Share your thoughts now ...</li>
+            {% endfor %}
         {% endblock %}
     </div>
 

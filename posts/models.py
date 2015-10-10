@@ -22,6 +22,12 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('posts:post_detail', kwargs={'slug': self.slug})
 
+    def get_update_url(self):
+        return reverse('posts:update_post', kwargs={'username': self.fk_user.username, 'slug': self.slug})
+
+    def get_delete_url(self):
+        return reverse('posts:delete_post', kwargs={'username': self.fk_user.username, 'slug': self.slug})
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)

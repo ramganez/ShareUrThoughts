@@ -4,10 +4,27 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 
+from django.views.generic import ListView
 from accounts.forms import SignUpForm, SigninForm
+from posts.models import Post
 
 # Create your views here.
 
+
+class LoginRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
+
+
+class HomeView(ListView):
+    model = Post
+    template_name = 'base.html'
+
+    def get_queryset(self):
+        posts = Post.objects.filter(deleted=False)
+        return posts
 
 
 def signup(request):
@@ -23,7 +40,7 @@ def signup(request):
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
             new_user.save()
-            return redirect('home')
+            return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'signup_form': form})
