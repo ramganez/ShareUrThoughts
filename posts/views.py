@@ -19,7 +19,7 @@ def user_posts(request, username):
     return render(request, 'posts/user_posts.html', {'user': username})
 
 
-class PostsList(ListView):
+class PostsList(LoginRequiredMixin, ListView):
     template_name = 'posts/user_posts.html'
 
     def get_queryset(self):
@@ -34,7 +34,7 @@ class PostsList(ListView):
         return context
 
 
-class CreatePost(CreateView):
+class CreatePost(LoginRequiredMixin, CreateView):
     form_class = PostForm
     template_name = 'posts/create_and_update.html'
 
@@ -54,7 +54,7 @@ def post_detail(request, slug):
     return render(request, 'posts/post_detail.html', {'post': post})
 
 
-class UpdatePost(UpdateView):
+class UpdatePost(LoginRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'posts/create_and_update.html'
@@ -66,7 +66,7 @@ class UpdatePost(UpdateView):
         return obj
 
 
-class DeletePost(DeleteView):
+class DeletePost(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'posts/delete_post.html'
 

@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 
+{% block header %}
+    <div class="nine columns">
+        <h2><a style="text-decoration: none" href="{% url 'home' %}">ShareUrThoughts </a></h2>
+    </div>
+    <div class="three columns">
+        <p>
+            <div>
+            {% if user.is_anonymous %}
+                <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
+                <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
+            {% else %}
+              <a class="button" href="{% url 'signout' %}">signout</a>
+            {% endif %}
+            </div>
+        </p>
+    </div>
+{% endblock %}
+
+
 {% block content %}
     <h1>Hello {{ user.first_name }}</h1>
 

@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from django.views.generic import ListView
 from accounts.forms import SignUpForm, SigninForm
@@ -12,10 +14,10 @@ from posts.models import Post
 
 
 class LoginRequiredMixin(object):
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 
 class HomeView(ListView):
@@ -40,6 +42,7 @@ def signup(request):
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
             new_user.save()
+            login(request, new_user)
             return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
@@ -53,8 +56,10 @@ def signin(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user:
-                return redirect('posts:user_posts', username=username)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('posts:user_posts', username=username)
             else:
                 form = SigninForm()
     else:
@@ -63,5 +68,5 @@ def signin(request):
 
 
 def signout(request):
-    pass
-
+    logout(request)
+    return redirect('home')

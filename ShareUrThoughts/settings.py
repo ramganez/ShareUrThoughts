@@ -88,6 +88,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL ='signin'
-LOGOUT_URL ='/signup'
+LOGIN_URL ='accounts.views.signin'
+
+LOGOUT_URL ='/'
 
