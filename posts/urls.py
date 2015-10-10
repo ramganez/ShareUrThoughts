@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     url(r'^(?P<username>\w+)/create$', CreatePost.as_view(), name='create_post'),
     url(r'^(?P<username>\w+)/update/(?P<slug>[-\w]+)$', UpdatePost.as_view(), name='update_post'),
     url(r'^(?P<username>\w+)/delete/(?P<slug>[-\w]+)$', DeletePost.as_view(), name='delete_post'),
-    url(r'^(?P<slug>[-\w]+)/$', post_detail, name='post_detail'),
+    url(r'^(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', post_detail, name='post_detail'),
 
     #comment
 

@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <form  method="post">
-        {% csrf_token %}
-        {{ signup_form.as_p }}
-        <input value="signup" type="submit">
-    </form>
+    <div class="content pure-u-1 pure-u-md-3-4">
+        <div>
+            <form  class="pure-form pure-form-aligned" method="post">
+                <div class="pure-control-group">
+                    {% csrf_token %}
+                    {{ signup_form.as_p }}
+                </div>
+                <div class="pure-controls">
+                    <button type="submit" value="{{ next }}" class="pure-button pure-button-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

@@ -11,8 +11,13 @@ class SignUpForm(forms.ModelForm):
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name']
         widgets = {
-        'password': forms.PasswordInput(),
+            'username': forms.TextInput(attrs={'placeholder': 'Pick a username'}),
+            'password': forms.PasswordInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+        self.fields['username'].help_text = ''
 
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()
@@ -44,8 +49,16 @@ class SigninForm(forms.ModelForm):
         model = User
         fields = ['username', 'password']
         widgets = {
-        'password': forms.PasswordInput(),
+            'username': forms.TextInput(attrs={'placeholder': 'Pick a username'}),
+            'password': forms.PasswordInput(),
+            'email': forms.TextInput(attrs={'placeholder': 'Your email'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Your First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Your Last Name'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(SigninForm, self).__init__(*args, **kwargs)
+        self.fields['username'].help_text = ''
 
     def clean(self):
         username = self.cleaned_data.get('username')

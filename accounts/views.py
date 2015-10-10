@@ -1,3 +1,5 @@
+import ipdb
+
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -42,7 +44,6 @@ def signup(request):
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
             new_user.save()
-            login(request, new_user)
             return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
@@ -50,6 +51,7 @@ def signup(request):
 
 
 def signin(request):
+    # ipdb.set_trace()
     if request.method == 'POST':
         form = SigninForm(request.POST)
         if form.is_valid():
@@ -59,6 +61,8 @@ def signin(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    if request.GET.get('next'):
+                        return redirect(request.GET.get('next'))
                     return redirect('posts:user_posts', username=username)
             else:
                 form = SigninForm()

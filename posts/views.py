@@ -47,7 +47,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
         return reverse('posts:user_posts', kwargs={'username': self.kwargs['username']})
 
 
-def post_detail(request, slug):
+def post_detail(request, pk, slug):
     # ipdb.set_trace()
     post = get_object_or_404(Post, slug=slug)
 

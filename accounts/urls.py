@@ -16,5 +16,4 @@ urlpatterns = patterns('',
 
     url(r'^signup/$', signup, name='signup'),
 
-
 )

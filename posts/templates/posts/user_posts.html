@@ -1,34 +1,40 @@
 {% extends "base.html" %}
 
-{% block header %}
-    <div class="nine columns">
-        <h2><a style="text-decoration: none" href="{% url 'home' %}">ShareUrThoughts </a></h2>
-    </div>
-    <div class="three columns">
-        <p>
-            <div>
-            {% if user.is_anonymous %}
-                <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
-                <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
-            {% else %}
-              <a class="button" href="{% url 'signout' %}">signout</a>
-            {% endif %}
-            </div>
-        </p>
-    </div>
-{% endblock %}
+
 
 
 {% block content %}
-    <h1>Hello {{ user.first_name }}</h1>
+    <div class="content pure-u-1 pure-u-md-3-4">
+        <div>
+        <!-- A wrapper for all the blog posts -->
+            <div class="posts">
+                <h1 class="content-subhead">
+                    <a class="button" href="{% url 'posts:create_post' user.username %}">Share new thoughts
+                    </a>
+                </h1>
+                <section class="post">
+                {% for post in object_list %}
+                    <header class="post-header">
+                            <h2 class="post-title">
+                                <a href="{{ post.get_update_url }}">{{ post.title }}</a>
+                            </h2>
+                            <p class="post-meta">
+                                posted on {{ post.posted_on }}
+                                <a class="pure-button" href="{{ post.get_delete_url }}">Delete </a>
+                            </p>
+                    </header>
+                    <div class="post-description">
+                        <p>
+                            {{ post.text }}
+                        </p>
+                    </div>
+                {% empty %}
+                    No thoughts ...
+                {% endfor %}
 
-    <ul>
-        {% for post in object_list %}
-            <li><a style="text-decoration: none" href="{{ post.get_update_url }}">{{ post.title }}</a></li> &nbsp;
-            <a class="button" href="{{ post.get_delete_url }}">Delete</a>
-        {% empty %}
-            <li>Share your thoughts now ...</li>
-        {% endfor %}
-    </ul>
-    <a class="button" href="{% url 'posts:create_post' user.username %}">Create</a>
-{% endblock %}
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

@@ -1,28 +1,53 @@
 {% extends "base.html" %}
 
-{% block header %}
-    <div class="nine columns">
-        <h2><a style="text-decoration: none" href="{% url 'home' %}">ShareUrThoughts </a></h2>
-    </div>
-    <div class="three columns">
-        <p>
-            <div>
-            {% if user.is_anonymous %}
-                <a class="button" href="{% url 'signin' %}">Sign in</a> &nbsp;
-                <a class="button" href="{% url 'signup' %}">Sign up</a> &nbsp;
-            {% else %}
-              <a class="button" href="{% url 'signout' %}">signout</a>
-            {% endif %}
-            </div>
-        </p>
-    </div>
-{% endblock %}
+
+{% block left-header %}
+    {% if user.is_anonymous %}
+        <li class="nav-item">
+            <a class="pure-button" href="{% url 'signin' %}">Sign in</a>
+        </li>
+        <li class="nav-item">
+            <a class="pure-button" href="{% url 'signup' %}">Sign up </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="pure-button" href="{% url 'signout' %}">Sign Out</a>
+        </li>
+    {% endif %}
+{% endblock left-header %}
 
 
 {% block content %}
+    <div class="content pure-u-1 pure-u-md-3-4">
+        <div>
+        <!-- A wrapper for all the blog posts -->
+            <div class="posts">
+                <section class="post">
+                    <header class="post-header">
+                            <h2 class="post-title">
+                                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                            </h2>
+                            <p class="post-meta">
+                                By {{ post.fk_user.first_name }} on {{ post.posted_on }}
+                            </p>
+                    </header>
+                    <div class="post-description">
+                        <p>
+                            {{ post.text }}
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>`
+{% endblock content %}
+
+{% block post_footer %}
     <div>
-        <h2>{{post.title}}<h2>
-        <h6>by {{ post.fk_user.username }}</h6>
-        <h4>{{ post.text }}</h4>
+        {% if user.is_anonymous %}
+            <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Add comment</a> &nbsp;
+        {% else %}
+            <a class="pure-button" href="#">Add comment</a>
+        {% endif %}
     </div>
-{% endblock %}
+{% endblock post_footer %}
