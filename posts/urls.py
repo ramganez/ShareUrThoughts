@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic.base import TemplateView
 
 from posts.views import (user_posts, PostsList, CreatePost, UpdatePost,
-                         DeletePost, post_detail)
+                         DeletePost, post_detail, create_comment)
 
 
 
@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/$', post_detail, name='post_detail'),
 
     #comment
+    url(r'^(?P<pk>[0-9]+)/(?P<slug>[-\w]+)/comment$', create_comment, name='create_comment'),
 
 
 )

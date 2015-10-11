@@ -1,10 +1,8 @@
-import itertools
-
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
@@ -30,36 +28,21 @@ class Post(models.Model):
     def get_delete_url(self):
         return reverse('posts:delete_post', kwargs={'username': self.fk_user.username, 'slug': self.slug})
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super(Post, self).save(*args, **kwargs)
-
-    def save(self):
-        post_obj = super(Post, self).save(commit=False)
-
-        after_slugify = slugify(post_obj.title)
-
-        for i in itertools.count(1):
-            if not Post.objects.filter(slug=after_slugify).exists():
-                break
-            after_slugify.slug = '%s-%d' % (after_slugify, i)
-
-        post_obj.save()
-
-        return post_obj
 
 
-
-class Comment(models.Model):
+class Comment(MPTTModel):
     fk_user = models.ForeignKey(User)
     fk_post = models.ForeignKey(Post)
-    comment = models.TextField()
+    comment = models.TextField(max_length=255)
+    parent_cmt = TreeForeignKey('self', null=True, blank=True, related_name='child_cmt', db_index=True)
     commented_on = models.DateField(default=datetime.now)
     deleted = models.BooleanField(default=False)
 
+    class MPTTMeta:
+        parent_attr = 'parent_cmt'
+        order_insertion_by = ['commented_on']
+
     def __unicode__(self):
         return '%s - comment' % self.fk_user
-
 
 

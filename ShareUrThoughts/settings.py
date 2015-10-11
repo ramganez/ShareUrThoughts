@@ -37,11 +37,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #my apps
+    # reusable apps
+    'django_extensions',
+    'mptt',
+
+    # our apps
     'accounts',
     'posts',
 
-    'django_extensions'
 )
 
 MIDDLEWARE_CLASSES = (

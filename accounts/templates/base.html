@@ -29,6 +29,9 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
+                                <a class="pure-button" href="{% url 'posts:user_posts' username=user.username %}">Ur Posts</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="pure-button" href="{% url 'signout' %}">Sign Out</a>
                             </li>
                         {% endif %}
@@ -56,6 +59,16 @@
                                 <p class="post-meta">
                                     By {{ post.fk_user.first_name }} on {{ post.posted_on }}
                                 </p>
+                                {% if post.comment_set.count != 0 %}
+                                    <p class="post-meta">
+                                        {{ post.comment_set.count }} comments
+                                    </p>
+                                {% else %}
+                                    <p class="post-meta">
+                                        0 comment
+                                    </p>
+                                {% endif %}
+
                         </header>
                         <div class="post-description">
                             <p>
@@ -72,11 +85,6 @@
     </div>
 {% endblock content %}
 
-
-<div class="content pure-u-1 pure-u-md-3-4">
-    {% block post_footer %}
-    {% endblock %}
-</div>
 
 </body>
 </html>

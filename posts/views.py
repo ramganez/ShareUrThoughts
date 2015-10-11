@@ -1,20 +1,22 @@
 import ipdb
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import (ListView, CreateView, UpdateView,
                                   DeleteView)
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 from accounts.views import LoginRequiredMixin
 from posts.models import Post, Comment
-from posts.forms import PostForm
+from posts.forms import PostForm, CommentForm
 
 # Create your views here.
 
-
+# views for posts
 def user_posts(request, username):
     return render(request, 'posts/user_posts.html', {'user': username})
 
@@ -40,6 +42,7 @@ class CreatePost(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         # ipdb.set_trace()
+
         form.instance.fk_user = User.objects.get(username=self.kwargs['username'])
         return super(CreatePost, self).form_valid(form)
 
@@ -50,9 +53,9 @@ class CreatePost(LoginRequiredMixin, CreateView):
 def post_detail(request, pk, slug):
     # ipdb.set_trace()
     post = get_object_or_404(Post, slug=slug)
+    node_set = post.comment_set.all()
 
-    return render(request, 'posts/post_detail.html', {'post': post})
-
+    return render(request, 'posts/post_detail.html', {'post': post, 'node_set': node_set})
 
 class UpdatePost(LoginRequiredMixin, UpdateView):
     form_class = PostForm
@@ -87,4 +90,39 @@ class DeletePost(LoginRequiredMixin, DeleteView):
         self.object.save()
 
         return HttpResponseRedirect(success_url)
+
+
+# views for comments
+
+@login_required
+def create_comment(request, pk, slug, **kwargs):
+
+    post = get_object_or_404(Post, slug=slug)
+    node_set = post.comment_set.all()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        # template_name = 'posts/post_detail.html'
+
+        if form.is_valid():
+            user_obj = request.user
+            form.instance.fk_user = user_obj
+            try:
+                post_obj = Post.objects.get(slug=slug)
+                form.instance.fk_post = post_obj
+                form.save()
+                node_set = post_obj.comment_set.all()
+            except ObjectDoesNotExist:
+                raise Http404
+            # TODO later is replay to comment
+
+            return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set})
+
+        else:
+            form = CommentForm()
+
+    else:
+        form = CommentForm()
+
+    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set})
 

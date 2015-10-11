@@ -1,0 +1,20 @@
+{% extends "posts/post_detail.html" %}
+
+{% block cmt_and_replay_form %}
+    <div>
+        {% if user.is_anonymous %}
+            <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">You must sign in to comment</a> &nbsp;
+
+        {% else %}
+            <form  class="pure-form pure-form-aligned" method="post">
+                <div class="pure-control-group">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="pure-controls">
+                    <button type="submit" value="{{ next }}" class="pure-button pure-button-primary">comment</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+{% endblock cmt_and_replay_form %}

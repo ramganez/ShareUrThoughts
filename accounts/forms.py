@@ -49,11 +49,7 @@ class SigninForm(forms.ModelForm):
         model = User
         fields = ['username', 'password']
         widgets = {
-            'username': forms.TextInput(attrs={'placeholder': 'Pick a username'}),
             'password': forms.PasswordInput(),
-            'email': forms.TextInput(attrs={'placeholder': 'Your email'}),
-            'first_name': forms.TextInput(attrs={'placeholder': 'Your First Name'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Your Last Name'}),
         }
 
     def __init__(self, *args, **kwargs):
