@@ -1,7 +1,17 @@
 {% extends "posts/post_detail.html" %}
 
+{% block extrahead %}
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        $(document).ready(function (){
+            $("html, body").animate({ scrollTop: $(window).height() }, 1000);
+        });
+    </script>
+{% endblock %}
+
+
 {% block cmt_and_replay_form %}
-    <div>
+    <div class="scrollD_form">
         {% if user.is_anonymous %}
             <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">You must sign in to comment</a> &nbsp;
 
@@ -9,10 +19,20 @@
             <form  class="pure-form pure-form-aligned" method="post">
                 <div class="pure-control-group">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                </div>
-                <div class="pure-controls">
-                    <button type="submit" value="{{ next }}" class="pure-button pure-button-primary">comment</button>
+                    <div class="pure-control-group">
+                    
+                    {% for field in form.visible_fields %}
+                        {{ field }}                      
+                    {% endfor %}
+                    <button type="submit" value="{{ next }}" class="pure-button pure-button-primary">
+                        {% if form_type == "reply_" %}                        
+                            reply
+                        {% else %}
+                            comment
+                        {% endif %}
+                    </button>
+
+                    </div>
                 </div>
             </form>
         </div>

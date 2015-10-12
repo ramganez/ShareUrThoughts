@@ -38,7 +38,11 @@
                         </p>
                         <ul >
                             <p class="post-meta">
-                                comments...
+                                {% if user.is_anonymous %}
+                                    <a href="{% url 'signin' %}?next={{ request.path }}">add comment</a> &nbsp;
+                                {% else %}
+                                    <a href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">add comment</a>
+                                {% endif %}
                             </p>
                             {% recursetree node_set %}
                                 <li>
@@ -51,7 +55,7 @@
                                     </p>
 
                                         {% if user.is_anonymous %}
-                                            <p class="post-meta"><a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Reply</a></p>
+                                            <p class="post-meta"><a href="{% url 'signin' %}?next={{ request.path }}">Reply</a></p>
                                         {% else %}
                                             <p class="post-meta"><a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a></p>
                                         {% endif %}
@@ -67,11 +71,7 @@
                         </ul>
 
                         {% block cmt_and_replay_form %}
-                        {% if user.is_anonymous %}
-                            <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Add comment</a> &nbsp;
-                        {% else %}
-                            <a class="pure-button" href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">Add comment</a>
-                        {% endif %}
+
                         {% endblock cmt_and_replay_form %}
 
                     </div>

@@ -114,7 +114,7 @@ def create_comment(request, pk, slug):
             except ObjectDoesNotExist:
                 raise Http404
 
-            return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set})
+            return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set,})
 
         else:
             form = CommentForm()
@@ -122,7 +122,7 @@ def create_comment(request, pk, slug):
     else:
         form = CommentForm()
 
-    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set})
+    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,  'form_type':'comment_'})
 
 
 @login_required
@@ -156,4 +156,4 @@ def create_thread(request, pk, slug, p_id):
     else:
         form = CommentForm()
 
-    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set})
+    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,'form_type':'reply_'})
