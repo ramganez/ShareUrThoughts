@@ -95,9 +95,9 @@ class DeletePost(LoginRequiredMixin, DeleteView):
 # views for comments
 
 @login_required
-def create_comment(request, pk, slug):
-
-    post = get_object_or_404(Post, slug=slug)
+def create_comments(request, **kwargs):
+    # ipdb.set_trace()
+    post = get_object_or_404(Post, slug=kwargs['slug'])
     node_set = post.comment_set.all()
 
     if request.method == 'POST':
@@ -107,8 +107,17 @@ def create_comment(request, pk, slug):
             user_obj = request.user
             form.instance.fk_user = user_obj
             try:
-                post_obj = Post.objects.get(slug=slug)
+                post_obj = Post.objects.get(slug=kwargs['slug'])
                 form.instance.fk_post = post_obj
+
+                # if reply
+                if kwargs.has_key('p_id'):
+                    form.instance.parent_cmt = Comment.objects.get(id=kwargs['p_id'])
+                    form_type = 'reply_'
+                else:
+                    form_type = 'comment_'
+
+                form.save()
                 form.save()
                 node_set = post_obj.comment_set.all()
             except ObjectDoesNotExist:
@@ -118,42 +127,11 @@ def create_comment(request, pk, slug):
 
         else:
             form = CommentForm()
-
+            form_type = 'comment_'
     else:
         form = CommentForm()
+        form_type = 'comment_'
 
-    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,  'form_type':'comment_'})
+    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,
+                                                       'form_type': form_type})
 
-
-@login_required
-def create_thread(request, pk, slug, p_id):
-
-    post = get_object_or_404(Post, slug=slug)
-    node_set = post.comment_set.all()
-
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-
-        if form.is_valid():
-            user_obj = request.user
-            form.instance.fk_user = user_obj
-            try:
-                post_obj = Post.objects.get(slug=slug)
-                form.instance.fk_post = post_obj
-
-                # if threaded case
-                form.instance.parent_cmt = Comment.objects.get(id=p_id)
-                form.save()
-
-                node_set = post_obj.comment_set.all()
-            except ObjectDoesNotExist:
-                raise Http404
-
-            return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set})
-        else:
-            form = CommentForm()
-
-    else:
-        form = CommentForm()
-
-    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,'form_type':'reply_'})
