@@ -95,14 +95,13 @@ class DeletePost(LoginRequiredMixin, DeleteView):
 # views for comments
 
 @login_required
-def create_comment(request, pk, slug, **kwargs):
+def create_comment(request, pk, slug):
 
     post = get_object_or_404(Post, slug=slug)
     node_set = post.comment_set.all()
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
-        # template_name = 'posts/post_detail.html'
 
         if form.is_valid():
             user_obj = request.user
@@ -114,7 +113,6 @@ def create_comment(request, pk, slug, **kwargs):
                 node_set = post_obj.comment_set.all()
             except ObjectDoesNotExist:
                 raise Http404
-            # TODO later is replay to comment
 
             return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set})
 
@@ -126,3 +124,36 @@ def create_comment(request, pk, slug, **kwargs):
 
     return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set})
 
+
+@login_required
+def create_thread(request, pk, slug, p_id):
+
+    post = get_object_or_404(Post, slug=slug)
+    node_set = post.comment_set.all()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+            user_obj = request.user
+            form.instance.fk_user = user_obj
+            try:
+                post_obj = Post.objects.get(slug=slug)
+                form.instance.fk_post = post_obj
+
+                # if threaded case
+                form.instance.parent_cmt = Comment.objects.get(id=p_id)
+                form.save()
+
+                node_set = post_obj.comment_set.all()
+            except ObjectDoesNotExist:
+                raise Http404
+
+            return render(request, 'posts/post_detail.html', {'post': post_obj, 'node_set': node_set})
+        else:
+            form = CommentForm()
+
+    else:
+        form = CommentForm()
+
+    return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set})

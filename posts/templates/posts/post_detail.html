@@ -46,23 +46,19 @@
                                         </div>
                                         <p class="post-meta">
                                             by {{ node.fk_user.first_name }} on {{ node.commented_on }}
-                                                {% comment "TODO for threaded comment" %}
                                                 {% if user.is_anonymous %}
                                                     <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Reply</a> &nbsp;
                                                 {% else %}
-                                                    <p><a href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">Reply</a> </p>
+                                                    <p><a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a> </p>
                                                 {% endif %}
-                                                {% endcomment %}
                                         {% if not node.is_leaf_node %}
                                             <ul class="children">
                                                 {{ children }}
-                                                    {% comment "TODO for threaded comment" %}
-                                                    {% if user.is_anonymous %}
-                                                        <a href="{% url 'signin' %}?next={{ request.path }}">Reply</a> &nbsp;
-                                                    {% else %}
-                                                        <a href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">Reply</a>
-                                                    {% endif %}
-                                                    {% endcomment %}
+                                                {% if user.is_anonymous %}
+                                                    <a href="{% url 'signin' %}?next={{ request.path }}">Reply</a> &nbsp;
+                                                {% else %}
+                                                    <a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a>
+                                                {% endif %}
                                             </ul>
                                         {% endif %}
                                     </li>
