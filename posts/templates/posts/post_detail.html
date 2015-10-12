@@ -36,42 +36,43 @@
                         <p>
                             {{ post.text }}
                         </p>
+                        <ul >
+                            <p class="post-meta">
+                                comments...
+                            </p>
+                            {% recursetree node_set %}
+                                <li>
+                                    <hr style="border-color:#FFFFFF; width:100%; ">
+                                    <div class="post-description">
+                                        {{ node.comment }}
+                                    </div>
+                                    <p class="post-meta">
+                                        by {{ node.fk_user.first_name }} on {{ node.commented_on }}
+                                    </p>
 
-                            <ul>
-                                {% recursetree node_set %}
-                                    <li>
-                                        <hr style="border-color:#FFFFFF; width:100%; ">
-                                        <div class="post-description">
-                                            {{ node.comment }}
-                                        </div>
-                                        <p class="post-meta">
-                                            by {{ node.fk_user.first_name }} on {{ node.commented_on }}
-                                                {% if user.is_anonymous %}
-                                                    <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Reply</a> &nbsp;
-                                                {% else %}
-                                                    <p><a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a> </p>
-                                                {% endif %}
-                                        {% if not node.is_leaf_node %}
-                                            <ul class="children">
-                                                {{ children }}
-                                                {% if user.is_anonymous %}
-                                                    <a href="{% url 'signin' %}?next={{ request.path }}">Reply</a> &nbsp;
-                                                {% else %}
-                                                    <a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a>
-                                                {% endif %}
-                                            </ul>
+                                        {% if user.is_anonymous %}
+                                            <p class="post-meta"><a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Reply</a></p>
+                                        {% else %}
+                                            <p class="post-meta"><a href="{% url 'posts:create_thread' pk=post.id slug=post.slug p_id=node.id %}">Reply</a></p>
                                         {% endif %}
-                                    </li>
-                                {% endrecursetree %}
-                            </ul>
 
-                            {% block cmt_and_replay_form %}
-                            {% if user.is_anonymous %}
-                                <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Add comment</a> &nbsp;
-                            {% else %}
-                                <a class="pure-button" href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">Add comment</a>
-                            {% endif %}
-                            {% endblock cmt_and_replay_form %}
+                                        {% if not node.is_leaf_node %}
+                                            <ul class="children" style="list-style: none;" >
+                                                {{ children }}
+                                            </ul>
+                                    {% endif %}
+
+                                </li>
+                            {% endrecursetree %}
+                        </ul>
+
+                        {% block cmt_and_replay_form %}
+                        {% if user.is_anonymous %}
+                            <a class="pure-button" href="{% url 'signin' %}?next={{ request.path }}">Add comment</a> &nbsp;
+                        {% else %}
+                            <a class="pure-button" href="{% url 'posts:create_comment' pk=post.id slug=post.slug %}">Add comment</a>
+                        {% endif %}
+                        {% endblock cmt_and_replay_form %}
 
                     </div>
                 </section>
