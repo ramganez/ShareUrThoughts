@@ -8,8 +8,8 @@
         <div>
         <!-- A wrapper for all the blog posts -->
             <div class="posts">
-                <h1 class="content-subhead">
-                    <a class="button" href="{% url 'posts:create_post' user.username %}">Share new thoughts
+                <h1 class="post-header">
+                    <a href="{% url 'posts:create_post' user.username %}">Share new thoughts
                     </a>
                 </h1>
                 <section class="post">
@@ -29,7 +29,9 @@
                         </p>
                     </div>
                 {% empty %}
+                    <p class="post-meta">
                     No thoughts ...
+                    </p>
                 {% endfor %}
 
                 </section>

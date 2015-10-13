@@ -1,5 +1,9 @@
 Django==1.8.5
+dj-database-url==0.3.0
+dj-static==0.0.6
+gunicorn==19.3.0
 ipdb
 django-extensions==1.5.7
 django-mptt
-
+psycopg2==2.6.1
+static3==0.6.1
