@@ -6,7 +6,7 @@
             <form  class="pure-form pure-form-aligned" method="post">
                 <div class="pure-control-group">
                     {% csrf_token %}
-                    {{ signup_form.as_p }}
+                    {{ signup_in_form.as_p}}
                 </div>
                 <div class="pure-controls">
                     <button type="submit" value="{{ next }}" class="pure-button pure-button-primary">Submit</button>

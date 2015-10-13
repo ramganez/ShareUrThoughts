@@ -16,11 +16,8 @@ from posts.forms import PostForm, CommentForm
 
 # Create your views here.
 
+
 # views for posts
-def user_posts(request, username):
-    return render(request, 'posts/user_posts.html', {'user': username})
-
-
 class PostsList(LoginRequiredMixin, ListView):
     template_name = 'posts/user_posts.html'
 
@@ -56,6 +53,7 @@ def post_detail(request, pk, slug):
     node_set = post.comment_set.all()
 
     return render(request, 'posts/post_detail.html', {'post': post, 'node_set': node_set})
+
 
 class UpdatePost(LoginRequiredMixin, UpdateView):
     form_class = PostForm
@@ -113,9 +111,6 @@ def create_comments(request, **kwargs):
                 # if reply
                 if kwargs.has_key('p_id'):
                     form.instance.parent_cmt = Comment.objects.get(id=kwargs['p_id'])
-                    form_type = 'reply_'
-                else:
-                    form_type = 'comment_'
 
                 form.save()
                 form.save()
@@ -127,10 +122,19 @@ def create_comments(request, **kwargs):
 
         else:
             form = CommentForm()
-            form_type = 'comment_'
+            if kwargs.has_key('p_id'):
+                form.instance.parent_cmt = Comment.objects.get(id=kwargs['p_id'])
+                form_type = 'reply_'
+            else:
+                form_type = 'comment_'
+
     else:
         form = CommentForm()
-        form_type = 'comment_'
+        if kwargs.has_key('p_id'):
+            form.instance.parent_cmt = Comment.objects.get(id=kwargs['p_id'])
+            form_type = 'reply_'
+        else:
+            form_type = 'comment_'
 
     return render(request, 'posts/comment_form.html', {'form': form, 'post': post, 'node_set': node_set,
                                                        'form_type': form_type})

@@ -7,6 +7,7 @@ from django import forms
 
 
 class PostForm(forms.ModelForm):
+
     class Meta:
         model = Post
         fields = ['title', 'text']
@@ -26,10 +27,12 @@ class PostForm(forms.ModelForm):
 
         return instance
 
+
 class CommentForm(forms.ModelForm):
+
     class Meta:
-        model=Comment
+        model = Comment
         fields = ['comment']
         widgets = {
-            'comment': forms.Textarea(attrs={'rows':1, 'cols':50}),
+            'comment': forms.Textarea(attrs={'rows': 1,'cols': 50}),
         }

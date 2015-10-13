@@ -5,9 +5,6 @@ from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
 
-# Create your models here.
-
-
 class Post(models.Model):
     fk_user = models.ForeignKey(User)
     title = models.CharField(max_length=255, null=False, blank=False)
@@ -15,6 +12,9 @@ class Post(models.Model):
     posted_on = models.DateField(default=datetime.now)
     deleted = models.BooleanField(default=False)
     slug = models.SlugField(unique=True)
+
+    class Meta:
+        ordering = ['posted_on']
 
     def __unicode__(self):
         return '%s' % self.title
@@ -27,7 +27,6 @@ class Post(models.Model):
 
     def get_delete_url(self):
         return reverse('posts:delete_post', kwargs={'username': self.fk_user.username, 'slug': self.slug})
-
 
 
 class Comment(MPTTModel):

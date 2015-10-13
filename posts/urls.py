@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.base import TemplateView
 
-from posts.views import (user_posts, PostsList, CreatePost, UpdatePost,
+from posts.views import (PostsList, CreatePost, UpdatePost,
                          DeletePost, post_detail, create_comments)
 
 

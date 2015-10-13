@@ -33,7 +33,7 @@ class HomeView(ListView):
 
 def signup(request):
     if request.method == 'POST':
-        ipdb.set_trace()
+        # ipdb.set_trace()
         form = SignUpForm(request.POST)
 
         if form.is_valid():
@@ -50,7 +50,7 @@ def signup(request):
             return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
-    return render(request, 'accounts/signup_in.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_in_form': form})
 
 
 def signin(request):
@@ -71,7 +71,7 @@ def signin(request):
                 form = SigninForm()
     else:
         form = SigninForm()
-    return render(request, 'accounts/signup_in.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_in_form': form})
 
 
 def signout(request):
