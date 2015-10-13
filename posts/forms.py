@@ -18,6 +18,10 @@ class PostForm(forms.ModelForm):
         orig = slugify(instance.title)
         instance.slug = orig
 
+        # truncate the slug to 50 char
+        if len(orig) > 50:
+            instance.slug = orig[:48]+'--'
+
         for x in itertools.count(1):
             if not Post.objects.filter(slug=instance.slug).exists():
                 break
