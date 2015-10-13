@@ -50,7 +50,7 @@ def signup(request):
             return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
-    return render(request, 'accounts/signup.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_form': form})
 
 
 def signin(request):
@@ -71,7 +71,7 @@ def signin(request):
                 form = SigninForm()
     else:
         form = SigninForm()
-    return render(request, 'accounts/signup.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_form': form})
 
 
 def signout(request):
