@@ -33,6 +33,7 @@ class HomeView(ListView):
 
 def signup(request):
     if request.method == 'POST':
+        ipdb.set_trace()
         form = SignUpForm(request.POST)
 
         if form.is_valid():
@@ -44,10 +45,12 @@ def signup(request):
             new_user.first_name = form.cleaned_data['first_name']
             new_user.last_name = form.cleaned_data['last_name']
             new_user.save()
+            new_user = authenticate(username=username, password=password)
+            login(request, new_user)
             return redirect('posts:user_posts', username=username)
     else:
         form = SignUpForm()
-    return render(request, 'accounts/signup.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_form': form})
 
 
 def signin(request):
@@ -68,7 +71,7 @@ def signin(request):
                 form = SigninForm()
     else:
         form = SigninForm()
-    return render(request, 'accounts/signup.html', {'signup_form': form})
+    return render(request, 'accounts/signup_in.html', {'signup_form': form})
 
 
 def signout(request):
