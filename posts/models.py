@@ -14,7 +14,7 @@ class Post(models.Model):
     slug = models.SlugField(unique=True)
 
     class Meta:
-        ordering = ['posted_on']
+        ordering = ['-id']
 
     def __unicode__(self):
         return '%s' % self.title
