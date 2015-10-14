@@ -1,0 +1,2 @@
+# ShareUrThoughts
+Simple blogging Application 
